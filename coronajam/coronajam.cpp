@@ -2,10 +2,77 @@
 //
 
 #include <iostream>
+#include <stdio.h>
+
+
+
+struct node {
+   int data;
+   struct node* next;
+};
+
+node* createNode(node* next, int value) {
+   node* newNode = (node*)malloc(sizeof(node));
+
+   if (newNode == NULL) {
+      fprintf(stdout, "There was an error making the node.");
+      exit(0);
+   }
+
+   newNode->data = value;
+   newNode->next = next;
+   return newNode;
+};
+
+node* addToStart(node* head, int value) {
+   node* newNode = createNode(head, value);
+   head = newNode;
+   newNode->data = value;
+   return head;
+};
+
+void printList(node* head) {
+   node* temp = head;
+   int count = 1;
+   while (temp != nullptr && temp->data != NULL) {
+      fprintf(stdout, "%d %d\n", count, temp->data);
+      temp = temp->next;
+      count ++;
+   }
+};
+
 
 int main()
 {
-    std::cout << "Let's practice tonight or tomorrow :) \n";
+   node* head = createNode(nullptr, NULL);
+
+   head = addToStart(head, 2);
+
+   fprintf(stdout, "%d %p \n", head->data, head->next);
+
+   head = addToStart(head, 5);
+
+   fprintf(stdout, "%d %p \n", head->data, head->next);
+
+   printList(head);
+
+   //node* head = nullptr;
+
+   //node* first = (node*)malloc(sizeof(node));
+   //node* second = (node*)malloc(sizeof(node));
+
+   //head = first;
+   //first->next = second;
+   //first->data = 3;
+
+   //second->next = nullptr;
+   //second->data = 5;
+
+   //fprintf(stdout, "%d %p \n", head->data, head->next);
+   //fprintf(stdout, "%d %p \n", head->next->data, head->next->next);
+
+   //printList(head);
+
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
