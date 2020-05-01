@@ -4,14 +4,12 @@
 #include <iostream>
 #include <stdio.h>
 
-
-
 struct node {
    int data;
    struct node* next;
 };
 
-node* createNode(node* next, int value) {
+node* createNode(int value, node* next = nullptr) {
    node* newNode = (node*)malloc(sizeof(node));
 
    if (newNode == NULL) {
@@ -24,19 +22,96 @@ node* createNode(node* next, int value) {
    return newNode;
 };
 
+void freeNode(node* link) {
+   free(link);
+};
+
 node* addToStart(node* head, int value) {
-   node* newNode = createNode(head, value);
+   node* newNode = createNode(value, head);
    head = newNode;
-   newNode->data = value;
+
    return head;
 };
 
-void printList(node* head) {
-   node* temp = head;
+node* findValue(node* head, int searchVal = NULL){
+   node* position = head;
    int count = 1;
-   while (temp != nullptr && temp->data != NULL) {
-      fprintf(stdout, "%d %d\n", count, temp->data);
-      temp = temp->next;
+   while (position != nullptr) {
+      if (searchVal == position->data) {
+         //fprintf(stdout, "%d %p \n", position->data, position->next);
+         return position;
+      }
+      if (position->next == nullptr) {
+         return position;
+      }
+      position = position->next;
+      count++;
+
+   }
+   return position; //this seems bad
+};
+
+int findLength(node* head) {
+   node* position = head;
+   int count = 1;
+   while (position != nullptr) {
+      if (position->next == nullptr) {
+         fprintf(stdout, "Length is %d \n", count);
+         return count;
+      }
+      position = position->next;
+      count++;
+
+   }
+};
+
+
+void addToEnd(node* head, int value) {
+   node* newNode = createNode(value);
+
+   node* end = findValue(head, NULL);
+   end->next = newNode;
+};
+
+node* deleteNode(node* head, int value){
+   node* position = head;
+   node* previous = nullptr;
+   int count = 1;
+
+   while (position != nullptr) {
+      if (value == position->data) {
+         if (previous == nullptr) { //at the start
+            head = position->next;
+            freeNode(position);
+            return head;
+         }
+         else if(position->next == nullptr) { //at the end
+            previous->next = nullptr;
+            freeNode(position);
+            return head;
+         }
+         else { //hopefully in the middle
+            previous->next = position->next;
+            freeNode(position);
+            return head;
+         }
+      }
+
+      previous = position;
+      position = position->next;
+      count++;
+
+   }
+   
+};
+
+void printList(node* head){
+   node* position = head;
+   int count = 1;
+   fprintf(stdout, "----BEGIN LIST-----\n");
+   while (position != nullptr) {
+      fprintf(stdout, "%d %d\n", count, position->data);
+      position = position->next;
       count ++;
    }
 };
@@ -44,44 +119,30 @@ void printList(node* head) {
 
 int main()
 {
-   node* head = createNode(nullptr, NULL);
-
-   head = addToStart(head, 2);
-
-   fprintf(stdout, "%d %p \n", head->data, head->next);
-
-   head = addToStart(head, 5);
-
-   fprintf(stdout, "%d %p \n", head->data, head->next);
+   node* head = createNode(7);
 
    printList(head);
 
-   //node* head = nullptr;
+   head = addToStart(head, 2);
 
-   //node* first = (node*)malloc(sizeof(node));
-   //node* second = (node*)malloc(sizeof(node));
+   printList(head);
 
-   //head = first;
-   //first->next = second;
-   //first->data = 3;
+   head = addToStart(head, 5);
 
-   //second->next = nullptr;
-   //second->data = 5;
+   printList(head);
 
-   //fprintf(stdout, "%d %p \n", head->data, head->next);
-   //fprintf(stdout, "%d %p \n", head->next->data, head->next->next);
+   addToEnd(head, 8);
 
-   //printList(head);
+   printList(head);
+
+   head = deleteNode(head, 2);
+
+   printList(head);
+
+   head = deleteNode(head, 8);
+
+   printList(head);
+
+   findLength(head);
 
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
