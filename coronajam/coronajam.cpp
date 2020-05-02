@@ -1,15 +1,20 @@
 // coronajam.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <iostream>
 #include <stdio.h>
+#include <stdlib.h>
 
 struct node {
    int data;
    struct node* next;
 };
 
-node* createNode(int value, node* next = nullptr) {
+struct cursors {
+   node* previous = nullptr;
+   node* match = nullptr;
+};
+
+node* createNode() {
    node* newNode = (node*)malloc(sizeof(node));
 
    if (newNode == NULL) {
@@ -17,93 +22,123 @@ node* createNode(int value, node* next = nullptr) {
       exit(0);
    }
 
-   newNode->data = value;
-   newNode->next = next;
+   newNode->next = nullptr;
    return newNode;
-};
+}
 
 void freeNode(node* link) {
    free(link);
-};
+}
 
-node* addToStart(node* head, int value) {
-   node* newNode = createNode(value, head);
+node* createList(int value) {
+   node* newList = createNode();
+   newList->data = value;
+   return newList;
+}
+
+
+void destroyList(node* head) {
+   node* target = nullptr;
+
+   while (head != nullptr) {
+      target = head;
+      head = head->next;
+      freeNode(target);
+   }
+}
+
+cursors findEnd(node* head) {
+   cursors out;
+
+   while (head != nullptr) {
+      if (head->next == nullptr) {
+         out.match = head;
+         return out;
+      }
+      out.previous = head;
+      head = head->next;
+   }
+}
+
+cursors findValue(node* head, int searchVal){
+   cursors out;
+
+   while (head != nullptr) {
+      if (searchVal == head->data) {
+         out.match = head;
+         return out;
+      }
+      out.previous = head;
+      head = head->next;
+
+   }
+   return out; 
+}
+
+void addToStart(node* &head, int value) {
+   node* newNode = createNode();
+   newNode->data = value;
+   newNode->next = head;
+
    head = newNode;
-
-   return head;
-};
-
-node* findValue(node* head, int searchVal = NULL){
-   node* position = head;
-   int count = 1;
-   while (position != nullptr) {
-      if (searchVal == position->data) {
-         //fprintf(stdout, "%d %p \n", position->data, position->next);
-         return position;
-      }
-      if (position->next == nullptr) {
-         return position;
-      }
-      position = position->next;
-      count++;
-
-   }
-   return position; //this seems bad
-};
-
-int findLength(node* head) {
-   node* position = head;
-   int count = 1;
-   while (position != nullptr) {
-      if (position->next == nullptr) {
-         fprintf(stdout, "Length is %d \n", count);
-         return count;
-      }
-      position = position->next;
-      count++;
-
-   }
-};
+}
 
 
 void addToEnd(node* head, int value) {
-   node* newNode = createNode(value);
+   node* newNode = createNode();
 
-   node* end = findValue(head, NULL);
-   end->next = newNode;
-};
+   newNode->data = value;
+   cursors end = findEnd(head);
+   end.match->next = newNode;
+}
 
-node* deleteNode(node* head, int value){
+int findLength(node* head) {
    node* position = head;
-   node* previous = nullptr;
-   int count = 1;
-
+   int count = 0;
    while (position != nullptr) {
-      if (value == position->data) {
-         if (previous == nullptr) { //at the start
-            head = position->next;
-            freeNode(position);
-            return head;
-         }
-         else if(position->next == nullptr) { //at the end
-            previous->next = nullptr;
-            freeNode(position);
-            return head;
-         }
-         else { //hopefully in the middle
-            previous->next = position->next;
-            freeNode(position);
-            return head;
-         }
-      }
-
-      previous = position;
-      position = position->next;
       count++;
-
+      position = position->next;
    }
-   
-};
+   return count;
+}
+
+void deleteByValue(node* &head, int value){
+   cursors target = findValue(head, value);
+   if (! target.match) { 
+      fprintf(stdout, "Attempted to delete %d \nNo matching value in list.\n", value);
+      return; 
+   }
+
+   if (target.previous == nullptr) {
+      head = target.match->next;
+      freeNode(target.match);
+   }
+
+   else if (target.match->next == nullptr) {
+      target.previous->next = nullptr;
+      freeNode(target.match);
+   }
+
+   else {
+      target.previous->next = target.match->next;
+      freeNode(target.match);
+   }
+}
+
+int popStart(node* &head) {
+   int out = head->data;
+   deleteByValue(head, out);
+   return out;
+}
+
+int popEnd(node* head) {
+   cursors target = findEnd(head);
+   int out = target.match->data;
+   freeNode(target.match);
+   target.previous->next = nullptr;
+   return out;
+
+}
 
 void printList(node* head){
    node* position = head;
@@ -114,35 +149,46 @@ void printList(node* head){
       position = position->next;
       count ++;
    }
-};
+}
 
 
 int main()
 {
-   node* head = createNode(7);
+   node* head = createList(3);
+
+   addToStart(head, 2);
+   addToStart(head, 5);
 
    printList(head);
 
-   head = addToStart(head, 2);
-
-   printList(head);
-
-   head = addToStart(head, 5);
-
-   printList(head);
-
+   addToEnd(head, 3);
    addToEnd(head, 8);
 
    printList(head);
 
-   head = deleteNode(head, 2);
+   deleteByValue(head, 2);
+   deleteByValue(head, 8);
+   deleteByValue(head, NULL);
 
    printList(head);
 
-   head = deleteNode(head, 8);
+   findValue(head, 3);
+
+   addToStart(head, 2);
+   addToStart(head, 5);
 
    printList(head);
 
-   findLength(head);
+   fprintf(stdout, "POP START: %d \n", popStart(head));
+
+   printList(head);
+
+   fprintf(stdout, "POP END: %d \n", popEnd(head));
+
+   printList(head);
+
+   fprintf(stdout, "List length: %d \n", findLength(head) );
+
+   destroyList(head);
 
 }
