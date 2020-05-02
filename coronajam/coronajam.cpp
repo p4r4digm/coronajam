@@ -93,11 +93,10 @@ void addToEnd(node* head, int value) {
 }
 
 int findLength(node* head) {
-   node* position = head;
    int count = 0;
-   while (position != nullptr) {
+   while (head != nullptr) {
       count++;
-      position = position->next;
+      head = head->next;
    }
    return count;
 }
@@ -141,13 +140,12 @@ int popEnd(node* head) {
 }
 
 void printList(node* head){
-   node* position = head;
-   int count = 1;
    fprintf(stdout, "----BEGIN LIST-----\n");
-   while (position != nullptr) {
-      fprintf(stdout, "%d %d\n", count, position->data);
-      position = position->next;
-      count ++;
+   int count = 0;
+   while (head != nullptr) {
+      count++;
+      fprintf(stdout, "%d %d\n", count, head->data);
+      head = head->next;
    }
 }
 
