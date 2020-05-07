@@ -1,43 +1,29 @@
+#pragma once
 
-#ifndef LINKED_LIST_H
-#define LINKED_LIST_H
+typedef struct LinkedList LinkedList;
 
-struct node {
-   int data;
-   struct node* next;
-};
+LinkedList* linkedListCreate();
+void linkedListDestroy(LinkedList* llist);
 
-struct cursors {
-   node* previous = nullptr;
-   node* match = nullptr;
-};
+void linkedListPushFront(LinkedList* llist, int value);
+void linkedListPushBack(LinkedList* llist, int value);
+void linkedListInsert(LinkedList* llist, int index, int value);
 
-node* createNode();
+int linkedListFind(LinkedList* llist, int value);
+int linkedListGet(LinkedList* llist, int index);
+int linkedListFront(LinkedList* llist);
+int linkedListBack(LinkedList* llist);
 
-void freeNode(node* link);
+void linkedListRemove(LinkedList* llist, int value);
+void linkedListErase(LinkedList* llist, int index);
 
-node* createList(int value) ;
+int linkedListPopFront(LinkedList* llist);
+int linkedListPopBack(LinkedList* llist);
 
-void destroyList(node* head) ;
+bool linkedListIsEmpty(LinkedList* llist);
+int linkedListSize(LinkedList* llist);
 
-cursors findEnd(node* head) ;
+void linkedListTestFuncs();
+void linkedListPrintItems(LinkedList* llist);
 
-cursors findValue(node* head, int searchVal) ;
 
-void addToStart(node* &head, int value) ;
-
-void addToEnd(node* head, int value) ;
-
-int findLength(node* head) ;
-
-void deleteByValue(node* &head, int value) ;
-
-int popStart(node* &head) ;
-
-int popEnd(node* head) ;
-
-void printList(node* head) ;
-
-void testListFuncs() ;
-
-#endif // !LINKED_LIST_H
