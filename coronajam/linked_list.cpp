@@ -47,8 +47,7 @@ static Node* _createNode() {
 }
 
 static void _freeNode(Node* node) {
-   try {free(node); }
-   catch (...) { fprintf(stdout, "There was an error removing the node."); }
+   if (node) {free(node); }
 }
 
 LinkedList* linkedListCreate() {
@@ -71,8 +70,8 @@ void linkedListDestroy(LinkedList* llist) {
       cursor = cursor->next;
       _freeNode(cursor->previous);
    }
-   try { free(llist); }
-   catch (...) { fprintf(stdout, "There was an error destroying the list."); }
+   free(llist); 
+
    llist->head = nullptr;
    llist->tail = nullptr;
    llist->length = 0;

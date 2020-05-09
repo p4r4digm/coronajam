@@ -153,9 +153,11 @@
   <ItemGroup>
     <ClCompile Include="coronajam.cpp" />
     <ClCompile Include="linked_list.cpp" />
+    <ClCompile Include="myvector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="linked_list.h" />
+    <ClInclude Include="myvector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
