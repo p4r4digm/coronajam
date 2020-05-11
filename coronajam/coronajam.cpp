@@ -2,9 +2,10 @@
 //
 
 #include "linked_list.h"
+#include "myvector.h"
 
 int main()
 {
-   linkedListTestFuncs();
-
+   //linkedListTestFuncs();
+   vectorTestFuncs();
 }
