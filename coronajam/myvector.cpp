@@ -13,7 +13,7 @@ struct Vector {
 
 };
 
-Vector* vectorCreate (int capacity = 10, double growth = 1.5) {
+Vector* vectorCreate (int capacity, double growth) {
    Vector* vector = (Vector*)malloc(sizeof(Vector));
    int* data = nullptr;
    if (vector) {
@@ -164,6 +164,46 @@ int vectorFront(Vector* vector) {
    return INT_MIN;
 }
 
+int vectorSwap(Vector* vector, int first, int second) {
+   if (first < 0 && first > vector->length) {
+      return 0;
+   }
+   if (second <= 0 && second > vector->length) {
+      return 0;
+   }
+   int* t1 = _vectorGet(vector, first);
+   int* t2 = _vectorGet(vector, second);
+   if (t1 && t2) {
+      int temp = *t1;
+      *t1 = *t2;
+      *t2 = temp;
+      return 1;
+   }
+   return 0;
+}
+
+//int vectorInsert(Vector* vector, int index, int value) {
+//   if (index < 0 && index >= vector->length) {
+//      return 0;
+//   }
+//
+//   if (vector) {
+//      if (vector->length == vector->capacity) {
+//         int check = vectorResize(vector);
+//         if (check == 0) { return 0; }
+//      }
+//   }
+//   int current;
+//   int last = vectorGet(vector, index);
+//   vectorSet(vector, index, value);
+//
+//   for (int i = index + 1; i <= vector->length + 1, i++) {
+//      last = vectorGet(vector, i);
+//      vectorSet(vector, i);
+//   }
+//   return 0;
+//}
+
 int vectorBack(Vector* vector) {
    int* loc = _vectorGet(vector, vector->length);
    if (loc) { return *loc; }
@@ -210,6 +250,10 @@ void vectorTestFuncs() {
    vectortPrintItems(myvec);
 
    fprintf(stdout, "Index out of range: %d \n", vectorSet(myvec, 4, 3));
+   vectortPrintItems(myvec);
+
+   fprintf(stdout, "Swapping 7 and 10");
+   vectorSwap(myvec, 7, 10);
    vectortPrintItems(myvec);
 
    fprintf(stdout, "Popping back: %d \n", vectorPopBack(myvec));

@@ -3,7 +3,7 @@
 typedef struct Vector Vector;
 
 //returns nullptr on failure
-Vector* vectorCreate(int initial_size);
+Vector* vectorCreate(int capacity = 10, double growth = 1.5);
 //returns 1 on success, 0 on failure
 int vectorDestroy(Vector* vector);
 

@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.28307.1082
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "coronajam", "coronajam\coronajam.vcxproj", "{7C20D494-4F82-482C-8739-E528CB0D700F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{30026A2E-7A56-42B0-ACEC-70C263C7526B} = {30026A2E-7A56-42B0-ACEC-70C263C7526B}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TEST", "TEST\TEST.vcxproj", "{30026A2E-7A56-42B0-ACEC-70C263C7526B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +26,14 @@ Global
 		{7C20D494-4F82-482C-8739-E528CB0D700F}.Release|x64.Build.0 = Release|x64
 		{7C20D494-4F82-482C-8739-E528CB0D700F}.Release|x86.ActiveCfg = Release|Win32
 		{7C20D494-4F82-482C-8739-E528CB0D700F}.Release|x86.Build.0 = Release|Win32
+		{30026A2E-7A56-42B0-ACEC-70C263C7526B}.Debug|x64.ActiveCfg = Debug|x64
+		{30026A2E-7A56-42B0-ACEC-70C263C7526B}.Debug|x64.Build.0 = Debug|x64
+		{30026A2E-7A56-42B0-ACEC-70C263C7526B}.Debug|x86.ActiveCfg = Debug|Win32
+		{30026A2E-7A56-42B0-ACEC-70C263C7526B}.Debug|x86.Build.0 = Debug|Win32
+		{30026A2E-7A56-42B0-ACEC-70C263C7526B}.Release|x64.ActiveCfg = Release|x64
+		{30026A2E-7A56-42B0-ACEC-70C263C7526B}.Release|x64.Build.0 = Release|x64
+		{30026A2E-7A56-42B0-ACEC-70C263C7526B}.Release|x86.ActiveCfg = Release|Win32
+		{30026A2E-7A56-42B0-ACEC-70C263C7526B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
