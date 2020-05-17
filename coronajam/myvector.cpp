@@ -16,13 +16,16 @@ struct Vector {
 Vector* vectorCreate (int capacity, double growth) {
    Vector* vector = (Vector*)malloc(sizeof(Vector));
    int* data = nullptr;
+   if (capacity <= 0) { capacity = 10; }
+   if (growth <= 1) { growth = 2; }
    if (vector) {
       int* data = (int*)malloc(sizeof(int) * capacity);
       if (data) {
          vector->data = data;
-         vector->growth = growth;
+         vector->growth = growth; 
+         vector->capacity = capacity; 
          vector->length = 0;
-         vector->capacity = capacity;
+         
          return vector;
       }
    }
@@ -67,10 +70,9 @@ static int _calcBuffer(Vector* vector){
    return out;
 }
 
-int vectorResize(Vector* vector, int newSize = NULL) {
-   if (newSize <= 0 || newSize < vector->length) {newSize = _calcBuffer(vector); }
+static int _vectorReserve(Vector* vector, int newSize) {
    if (vector) {
-      int* resizedData = (int*)realloc( vector->data, sizeof(int) * newSize);
+      int* resizedData = (int*)realloc(vector->data, sizeof(int) * newSize);
       if (resizedData) {
          //fprintf(stdout, "Resizing vector: %d to %d\n", vector->capacity, newSize);
          vector->data = resizedData;
@@ -81,8 +83,50 @@ int vectorResize(Vector* vector, int newSize = NULL) {
    return 0;
 }
 
+int vectorReserve(Vector* vector, int newSize) {
+   if (newSize <= vector->length) { return 0; }
+   if (vector) {
+      int check = _vectorReserve(vector, newSize);
+      if (check != 0) { return 1; }
+   }
+   return 0;
+}
+
+static int _vectorSetOutside(Vector* vector, int index, int value) {
+   if (vector) {
+      if (index > 0 && index <= vector->capacity) {
+         vector->data[index - 1] = value;
+         return 1;
+      }
+   }
+   return 0;
+}
+
+int vectorResize(Vector* vector, int newSize, int val) {
+   if (newSize <= 0) { return 0; }
+   if (vector) {
+      if (newSize > vector->length && newSize > vector->capacity) {
+         int check = _vectorReserve(vector, newSize);
+         if (check == 0) { return 0; }
+         for (int i = vector->length + 1; i <= newSize; i++) {
+            _vectorSetOutside(vector, i, val);
+         }
+         vector->length = newSize;
+         return 1;
+      }
+      
+      if (newSize < vector->length) {
+         int check = _vectorReserve(vector, newSize);
+         if (check == 0) { return 0; }
+         vector->length = newSize;
+         return 1;
+      }
+   }
+   return 0;
+}
+
 int vectorShrink(Vector* vector) {
-   int out = vectorResize(vector, vector->length);
+   int out = _vectorReserve(vector, vector->length);
    if (out == 0) { return 0; }
    return 1;
 }
@@ -115,21 +159,11 @@ int vectorSet(Vector* vector, int index, int value) {
    return 0;
 }
 
-static int _vectorSetOutside(Vector* vector, int index, int value) {
-   if (vector) {
-      if (index > 0 && index <= vector->capacity) {
-         vector->data[index - 1] = value;
-         return 1;
-      }
-   }
-   return 0;
-}
-
 int vectorPushBack(Vector* vector, int value) {
    int check = 0;
    if (vector) {
       if (vector->length == vector->capacity) {
-         check = vectorResize(vector);
+         check = vectorReserve(vector, _calcBuffer(vector));
          if (check == 0) { return 0; }
       }
       if (vector->data) {
@@ -164,6 +198,13 @@ int vectorFront(Vector* vector) {
    return INT_MIN;
 }
 
+int vectorBack(Vector* vector) {
+   int* loc = _vectorGet(vector, vector->length);
+   if (loc) { return *loc; }
+   return INT_MIN;
+}
+
+
 int vectorSwap(Vector* vector, int first, int second) {
    if (first < 0 && first > vector->length) {
       return 0;
@@ -182,32 +223,60 @@ int vectorSwap(Vector* vector, int first, int second) {
    return 0;
 }
 
-//int vectorInsert(Vector* vector, int index, int value) {
-//   if (index < 0 && index >= vector->length) {
-//      return 0;
-//   }
-//
-//   if (vector) {
-//      if (vector->length == vector->capacity) {
-//         int check = vectorResize(vector);
-//         if (check == 0) { return 0; }
-//      }
-//   }
-//   int current;
-//   int last = vectorGet(vector, index);
-//   vectorSet(vector, index, value);
-//
-//   for (int i = index + 1; i <= vector->length + 1, i++) {
-//      last = vectorGet(vector, i);
-//      vectorSet(vector, i);
-//   }
-//   return 0;
-//}
+int vectorInsert(Vector* vector, int index, int value) {
+   if (index < 0 || index > vector->length) {
+      return 0;
+   }
 
-int vectorBack(Vector* vector) {
-   int* loc = _vectorGet(vector, vector->length);
-   if (loc) { return *loc; }
-   return INT_MIN;
+   if (vector) {
+      if (vector->length + 1 >= vector->capacity) {
+         int check = _vectorReserve(vector, _calcBuffer(vector));
+         if (check == 0) { return 0; }
+      }
+
+      int current = vectorGet(vector, index);
+      vectorSet(vector, index, value);
+
+      for (int i = index + 1; i <= vector->length + 1; i++) {
+         int next = vectorGet(vector, i);
+         _vectorSetOutside(vector, i, current);
+         current = next;
+      }
+      vector->length += 1;
+      return 1;
+   }
+
+   return 0;
+}
+
+int vectorErase(Vector* vector, int index) {
+   if (index < 0 || index > vector->length) {
+      return 0;
+   }
+   if (index == vector->length) { vector->length -= 1; }
+
+   if (vector) {
+      for (int i = index; i < vector->length; i++) {
+         int next = vectorGet(vector, i + 1);
+         vectorSet(vector, i, next);
+      }
+      vector->length -= 1;
+      return 1;
+   }
+   return 0;
+}
+
+int vectorEmplace(Vector* vector, int index, int value) {
+   //How is this different from Insert?
+   return 0;
+}
+
+int vectorClear(Vector* vector) {
+   if (vector) {
+      vector->length = 0;
+      return 1;
+      }
+   return 0;
 }
 
 void vectortPrintItems(Vector* vector) {
@@ -260,6 +329,12 @@ void vectorTestFuncs() {
    vectortPrintItems(myvec);
 
    fprintf(stdout, "Vector size: %d \n", vectorSize(myvec));
+
+   vectorInsert(myvec, 3, 88);
+   vectortPrintItems(myvec);
+
+   vectorErase(myvec, 3);
+   vectortPrintItems(myvec);
 
    vectorDestroy(myvec);
    fprintf(stdout, "Is empty after destroy: %d \n", vectorIsEmpty(myvec));
