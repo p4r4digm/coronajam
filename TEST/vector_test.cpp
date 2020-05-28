@@ -1,5 +1,5 @@
-#include <catch2/catch.hpp>
-#include "myvector.cpp"
+#include "catch.hpp"
+#include <coronajam/myvector.h>
 
 TEST_CASE("Tests for my Vector", "[myvector]") {
 
@@ -14,11 +14,9 @@ TEST_CASE("Tests for my Vector", "[myvector]") {
    
    for (int i = 10; i < 25; i++) { vectorPushBack(myvec, i); }
 
-   REQUIRE(myvec->length == 15);
    REQUIRE(vectorFront(myvec) == 10);
    REQUIRE(vectorBack(myvec) == 24);
    REQUIRE(vectorPopBack(myvec) == 24);
-   REQUIRE(myvec->length == 14);
 
    vectorSet(myvec, 14, 99);
    REQUIRE(vectorGet(myvec, 14) == 99);
