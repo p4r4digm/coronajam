@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "coronajam", "coronajam\coro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TEST", "TEST\TEST.vcxproj", "{30026A2E-7A56-42B0-ACEC-70C263C7526B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sdl_fun", "sdl_fun\sdl_fun.vcxproj", "{494E8301-4105-46A6-95AE-01995BE9BA11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{30026A2E-7A56-42B0-ACEC-70C263C7526B}.Release|x64.Build.0 = Release|x64
 		{30026A2E-7A56-42B0-ACEC-70C263C7526B}.Release|x86.ActiveCfg = Release|Win32
 		{30026A2E-7A56-42B0-ACEC-70C263C7526B}.Release|x86.Build.0 = Release|Win32
+		{494E8301-4105-46A6-95AE-01995BE9BA11}.Debug|x64.ActiveCfg = Debug|x64
+		{494E8301-4105-46A6-95AE-01995BE9BA11}.Debug|x64.Build.0 = Debug|x64
+		{494E8301-4105-46A6-95AE-01995BE9BA11}.Debug|x86.ActiveCfg = Debug|Win32
+		{494E8301-4105-46A6-95AE-01995BE9BA11}.Debug|x86.Build.0 = Debug|Win32
+		{494E8301-4105-46A6-95AE-01995BE9BA11}.Release|x64.ActiveCfg = Release|x64
+		{494E8301-4105-46A6-95AE-01995BE9BA11}.Release|x64.Build.0 = Release|x64
+		{494E8301-4105-46A6-95AE-01995BE9BA11}.Release|x86.ActiveCfg = Release|Win32
+		{494E8301-4105-46A6-95AE-01995BE9BA11}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
